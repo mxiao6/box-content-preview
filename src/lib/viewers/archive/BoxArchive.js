@@ -12,7 +12,7 @@ class BoxArchive {
      */
     constructor(archiveEl, data) {
         this.archiveEl = archiveEl;
-        this.data = data;
+        this.archiveExplorer = ReactDOM.render(<ArchiveExplorer itemList={data} />, this.archiveEl);
     }
 
     /**
@@ -25,16 +25,6 @@ class BoxArchive {
             ReactDOM.unmountComponentAtNode(this.archiveEl);
             this.archiveExplorer = null;
         }
-    }
-
-    /**
-     * Renders Archive Content into an html table
-     *
-     * @return {void}
-     * @private
-     */
-    renderArchive() {
-        this.archiveExplorer = ReactDOM.render(<ArchiveExplorer data={this.data} />, this.archiveEl);
     }
 }
 

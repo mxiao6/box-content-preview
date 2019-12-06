@@ -338,7 +338,6 @@ class ArchiveViewer extends BaseViewer {
     finishLoading() {
         /* global BoxArchive */
         this.archiveComponent = new BoxArchive(this.archiveEl, this.data);
-        this.archiveComponent.renderArchive();
 
         this.loaded = true;
         this.emit(VIEWER_EVENT.load);

@@ -2055,15 +2055,10 @@ box-annotations@^2.3.0:
   resolved "https://registry.yarnpkg.com/box-annotations/-/box-annotations-2.3.0.tgz#5cac38171f7f8d9283659e2b243310f19d5ab7d3"
   integrity sha512-Ea7tPgyJjX7vcnmZIfCorbzHd6oYx/OHVMPnZVQL/dUHR5vRKhLM0610xqwmVlUpk627sqHw5x/APaa+kt4SXg==
 
-box-react-ui@^22.7.0:
-  version "22.7.0"
-  resolved "https://registry.yarnpkg.com/box-react-ui/-/box-react-ui-22.7.0.tgz#14ff057cc7b76fcedda35765817ce83306d7058e"
-  integrity sha512-QT7udoL4YwQ0e//MnDGPQT0O1uZ2VSpVa9hjmZWnFrZjJdy5MYB437YaFa73TWgyVuFRXeziw2S0Dhd4Mx8veQ==
-
-box-ui-elements@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/box-ui-elements/-/box-ui-elements-10.1.0.tgz#946a2ddeacace27a993f35bf3eee93dedbfb5e70"
-  integrity sha512-4tw+ydrSpB4EmOxwSsC0V/iPH88gEGce72e53Fa2XBo6De3zwE9xfRKiuJEuy8AJ7TOS2K5fRsOJUJXYlp0CfQ==
+box-ui-elements@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/box-ui-elements/-/box-ui-elements-11.0.2.tgz#e8d462c2daa4f06809b591571fa74fac545cae61"
+  integrity sha512-Wq+1M3AHK5aE+sbV7T5LBhwkKq7OFsbRQUfKSX5TliybncsAEG2nbdeo9k8fKabaTisnp4jgYTgf4MnTKzAtKg==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
