@@ -7,13 +7,13 @@ const VIEWERS = [
         NAME: 'Archive',
         CONSTRUCTOR: ArchiveViewer,
         REP: 'json',
-        EXT: ['zip'],
+        EXT: ['zip', 'jar'],
     },
     {
         NAME: 'Archive',
         CONSTRUCTOR: ArchiveViewer,
-        REP: ORIGINAL_REP_NAME,
-        EXT: ['zip'],
+        REP: ORIGINAL_REP_NAME, // for testing purposes, will remove later
+        EXT: ['zip', 'jar'],
     },
 ];
 
@@ -26,15 +26,6 @@ class ArchiveLoader extends AssetLoader {
     constructor() {
         super();
         this.viewers = VIEWERS;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    determineViewer(file, disabledViewers = []) {
-        const viewer = super.determineViewer(file, disabledViewers);
-
-        return viewer;
     }
 }
 

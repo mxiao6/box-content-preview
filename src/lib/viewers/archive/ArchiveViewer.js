@@ -225,43 +225,6 @@ const testData = [
     },
 ];
 
-const virtualizedTestData = [
-    {
-        id: 0,
-        name: "01 - Adam Sanders - Life I'm Livin'.m4a",
-        modified_at: '2019-05-10T18:02:30Z',
-        size: 6823316,
-        type: 'file',
-        modified_by: {
-            id: '666',
-            name: 'Mingze',
-            email: 'mxiao@box.com',
-            login: 'mxiao',
-        },
-        path: {
-            id: 0,
-            name: "01 - Adam Sanders - Life I'm Livin'.m4a",
-            size: 6823316,
-            itemPath: [{ name: 'folder1' }, { name: 'folder2' }],
-            itemType: 'file',
-        },
-    },
-    {
-        id: 1,
-        name: 'coraline.mp4',
-        modified_at: '2013-02-19T19:56:50Z',
-        size: 4464268,
-        type: 'file',
-        path: {
-            id: 1,
-            name: 'coraline.mp4',
-            size: 4464268,
-            itemPath: [{ id: '0' }],
-            itemType: 'file',
-        },
-    },
-];
-
 class ArchiveViewer extends BaseViewer {
     /**
      * @inheritdoc
@@ -315,18 +278,15 @@ class ArchiveViewer extends BaseViewer {
         const contentUrl = this.createContentUrlWithAuthParams(template);
         this.startLoadTimer();
 
-        this.api
-            .get(contentUrl)
-            .then(data => {
-                if (this.isDestroyed()) {
-                    return;
-                }
+        this.api.get(contentUrl).then(data => {
+            if (this.isDestroyed()) {
+                return;
+            }
 
-                this.data = testData;
+            this.data = testData;
 
-                this.finishLoading();
-            })
-            .catch(this.handleAssetError);
+            this.finishLoading();
+        });
     };
 
     /**
@@ -336,7 +296,10 @@ class ArchiveViewer extends BaseViewer {
      * @return {void}
      */
     finishLoading() {
-        /* global BoxArchive */
+        /*
+            global BoxArchive
+            The BoxArchive is loaded from archive.js
+        */
         this.archiveComponent = new BoxArchive(this.archiveEl, this.data);
 
         this.loaded = true;

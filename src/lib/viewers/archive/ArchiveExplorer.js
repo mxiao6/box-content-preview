@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import memoize from 'lodash/memoize';
 import Internationalize from 'box-ui-elements/es/elements/common/Internationalize';
 import {
     readableTimeCellRenderer,
@@ -14,7 +15,7 @@ const { KEY_NAME, KEY_MODIFIED_AT } = TABLE_COLUMNS;
 
 class ArchiveExplorer extends React.Component {
     static propTypes = {
-        itemList: PropTypes.arrayOf(
+        itemCollection: PropTypes.arrayOf(
             PropTypes.shape({
                 type: PropTypes.string.isRequired,
                 absolute_path: PropTypes.string.isRequired,
@@ -46,19 +47,7 @@ class ArchiveExplorer extends React.Component {
         ).isRequired,
     };
 
-    constructor(props) {
-        super(props);
-        const { cache, root } = this.buildCache(props.itemList);
-        this.cache = cache;
-        this.root = root;
-
-        this.state = {
-            itemList: cache[root],
-            fullPath: root,
-        };
-    }
-
-    buildCache = itemList => {
+    buildCache = memoize(itemList => {
         const folders = [];
         const temp = {};
         const cache = {};
@@ -79,27 +68,27 @@ class ArchiveExplorer extends React.Component {
         });
 
         return { cache, root };
-    };
+    });
 
-    updateData = absolutePath => {
-        this.setState({
-            itemList: this.cache[absolutePath],
-        });
-    };
+    constructor(props) {
+        super(props);
 
-    getRowData = ({ index }) => {
-        const { itemList } = this.state;
-        const currentRow = itemList[index];
-        const { name, type, modified_at: modifiedAt } = currentRow;
+        this.state = {
+            fullPath: undefined,
+        };
+    }
+
+    getRowData = itemList => ({ index }) => {
+        const { name, type, modified_at: modifiedAt, ...rest } = itemList[index];
 
         const rowData = {
-            ...currentRow,
             [KEY_NAME]: {
                 isExternal: false,
                 name,
                 type,
             },
             [KEY_MODIFIED_AT]: `20${modifiedAt}`,
+            ...rest,
         };
         return rowData;
     };
@@ -108,17 +97,32 @@ class ArchiveExplorer extends React.Component {
         const { name } = cellValue;
         const { fullPath } = this.state;
         const nextFullPath = `${fullPath}${name}/`;
-        this.updateData(nextFullPath);
         this.setState({
             fullPath: nextFullPath,
         });
     };
 
     render() {
-        const { itemList } = this.state;
+        const { itemCollection } = this.props;
+        const { fullPath } = this.state;
+        const { cache, root } = this.buildCache(itemCollection);
+
+        if (!fullPath) {
+            this.setState({
+                fullPath: root,
+            });
+            return null;
+        }
+
+        const itemList = cache[fullPath];
+
         return (
             <Internationalize language="en-us" messages={{}}>
-                <VirtualizedTable className="ArchiveFilesTable" rowData={itemList} rowGetter={this.getRowData}>
+                <VirtualizedTable
+                    className="ArchiveFilesTable"
+                    rowData={itemList}
+                    rowGetter={this.getRowData(itemList)}
+                >
                     {intl => [
                         <Column
                             key="Filename"
@@ -126,7 +130,7 @@ class ArchiveExplorer extends React.Component {
                             dataKey={KEY_NAME}
                             disableSort
                             flexGrow={3}
-                            label="Filename"
+                            label={__('filename')}
                             width={1}
                         />,
                         <Column
@@ -135,7 +139,7 @@ class ArchiveExplorer extends React.Component {
                             dataKey={KEY_MODIFIED_AT}
                             disableSort
                             flexGrow={2}
-                            label="Last modified date"
+                            label={__('last_modified_date')}
                             width={1}
                         />,
                         <Column
@@ -144,7 +148,7 @@ class ArchiveExplorer extends React.Component {
                             dataKey="size"
                             disableSort
                             flexGrow={1}
-                            label="Size"
+                            label={__('size')}
                             width={1}
                         />,
                     ]}
