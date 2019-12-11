@@ -107,4 +107,14 @@ describe('lib/viewers/archive/ArchiveExplorer', () => {
             });
         });
     });
+
+    describe('getItemList()', () => {
+        it('should return correct item list', () => {
+            const component = shallow(<ArchiveExplorer itemCollection={data} />);
+
+            const itemList = component.instance().getItemList(data, 'test/');
+
+            expect(itemList).to.eql([data[1], data[2]]);
+        });
+    });
 });

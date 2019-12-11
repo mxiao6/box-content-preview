@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import memoize from 'lodash/memoize';
+import get from 'lodash/get';
 import Internationalize from 'box-ui-elements/es/elements/common/Internationalize';
 import {
     readableTimeCellRenderer,
@@ -47,35 +47,45 @@ class ArchiveExplorer extends React.Component {
         ).isRequired,
     };
 
+    /**
+     * [constructor]
+     *
+     * @param {Object} props - React element properties
+     */
     constructor(props) {
         super(props);
 
         this.state = {
             fullPath: props.itemCollection.find(info => !info.parent).absolute_path,
         };
-
-        this.memoBuildCache = memoize(this.buildCache);
     }
 
-    buildCache = itemCollection => {
-        const folders = [];
-        const temp = {};
-        const cache = {};
+    /**
+     * Filter itemlist for target folder
+     *
+     * @param {Array<Object>} itemCollection - raw data
+     * @param {string} fullPath - target folder path
+     * @return {Array<Object>} filtered itemlist for target folder
+     */
+    getItemList = (itemCollection, fullPath) => {
+        const folderInfo = itemCollection.find(item => item.absolute_path === fullPath);
+        const subItems = get(folderInfo, 'item_collection.entries');
+        if (!subItems) {
+            return [];
+        }
+        const subItemsPath = subItems.map(item => item.absolute_path);
 
-        itemCollection.forEach(info => {
-            if (info.type === 'folder') {
-                folders.push(info);
-            }
-            temp[info.absolute_path] = info;
-        });
-
-        folders.forEach(folderInfo => {
-            cache[folderInfo.absolute_path] = folderInfo.item_collection.entries.map(item => temp[item.absolute_path]);
-        });
-
-        return cache;
+        return itemCollection.filter(item => subItemsPath.includes(item.absolute_path));
     };
 
+    /**
+     * Prepare data to render
+     * Will be passed as row getter into VirtaulizedTable
+     *
+     * @param {Array<Object>} itemList - list of data object
+     * @param {number} index - row index of the data to selected
+     * @return {Object} formatted data
+     */
     getRowData = itemList => ({ index }) => {
         const { modified_at: modifiedAt, name, size, type, ...rest } = itemList[index];
 
@@ -92,6 +102,12 @@ class ArchiveExplorer extends React.Component {
         return rowData;
     };
 
+    /**
+     * Handle click event, update fullPath state
+     *
+     * @param {Object} cellValue - the cell being clicked
+     * @return {void}
+     */
     handleClick = cellValue => {
         const { name } = cellValue;
         const { fullPath } = this.state;
@@ -101,12 +117,15 @@ class ArchiveExplorer extends React.Component {
         });
     };
 
+    /**
+     * render data
+     *
+     * @return {jsx} VirtualizedTable
+     */
     render() {
         const { itemCollection } = this.props;
         const { fullPath } = this.state;
-        const cache = this.memoBuildCache(itemCollection);
-
-        const itemList = cache[fullPath];
+        const itemList = this.getItemList(itemCollection, fullPath);
 
         return (
             <Internationalize language="en-us" messages={{}}>
