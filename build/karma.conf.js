@@ -97,9 +97,11 @@ module.exports = config =>
             `src/third-party/model3d/${MODEL3D_STATIC_ASSETS_VERSION}/**/*.js`,
             `src/third-party/swf/${SWF_STATIC_ASSETS_VERSION}/**/*.js`,
             `src/third-party/text/${TEXT_STATIC_ASSETS_VERSION}/**/*.js`,
+            'build/webpack.test.js',
         ].concat(getTestFile(config.src)),
 
         preprocessors: {
+            'build/webpack.test.js': ['webpack', 'sourcemap'],
             'src/**/__tests__/**/*-test.js': ['webpack', 'sourcemap'],
             'src/**/__tests__/**/*-test.html': ['html2js'],
         },

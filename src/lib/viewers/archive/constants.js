@@ -1,6 +1,7 @@
 const TABLE_COLUMNS = {
-    KEY_NAME: 'key_name',
     KEY_MODIFIED_AT: 'key_modified_at',
+    KEY_NAME: 'key_name',
+    KEY_SIZE: 'key_size',
 };
 
 // eslint-disable-next-line import/prefer-default-export

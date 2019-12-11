@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import get from 'lodash/get';
 import './Archive.scss';
 import BaseViewer from '../BaseViewer';
 import { VIEWER_EVENT } from '../../events';
@@ -262,49 +263,39 @@ class ArchiveViewer extends BaseViewer {
         super.load();
 
         return Promise.all([this.loadAssets(JS, CSS), this.getRepStatus().getPromise()])
-            .then(this.postLoad)
+            .then(() => {
+                const { representation } = this.options;
+                const template = get(representation, 'info.url') || get(representation, 'content.url_template');
+                const contentUrl = this.createContentUrlWithAuthParams(template);
+                this.startLoadTimer();
+
+                return this.api.get(contentUrl);
+            })
+            .then(this.finishLoading)
             .catch(this.handleAssetError);
     }
-
-    /**
-     * Loads archive file representation.
-     *
-     * @private
-     * @return {Promise} promise to get archive content
-     */
-    postLoad = () => {
-        const { representation } = this.options;
-        const template = representation.content.url_template;
-        const contentUrl = this.createContentUrlWithAuthParams(template);
-        this.startLoadTimer();
-
-        this.api.get(contentUrl).then(data => {
-            if (this.isDestroyed()) {
-                return;
-            }
-
-            this.data = testData;
-
-            this.finishLoading();
-        });
-    };
 
     /**
      * Finishes loading the archive data
      *
      * @private
+     * @param {Array<Object>} data - archive data collection
      * @return {void}
      */
-    finishLoading() {
+    finishLoading = data => {
+        if (this.isDestroyed()) {
+            return;
+        }
+
         /*
             global BoxArchive
             The BoxArchive is loaded from archive.js
         */
-        this.archiveComponent = new BoxArchive(this.archiveEl, this.data);
+        this.archiveComponent = new BoxArchive(this.archiveEl, testData);
 
         this.loaded = true;
         this.emit(VIEWER_EVENT.load);
-    }
+    };
 }
 
 export default ArchiveViewer;

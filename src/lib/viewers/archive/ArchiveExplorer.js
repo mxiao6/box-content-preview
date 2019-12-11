@@ -11,7 +11,7 @@ import VirtualizedTable from 'box-ui-elements/es/features/virtualized-table';
 import { Column } from 'react-virtualized/dist/es/Table/index';
 import { TABLE_COLUMNS } from './constants';
 
-const { KEY_NAME, KEY_MODIFIED_AT } = TABLE_COLUMNS;
+const { KEY_NAME, KEY_MODIFIED_AT, KEY_SIZE } = TABLE_COLUMNS;
 
 class ArchiveExplorer extends React.Component {
     static propTypes = {
@@ -47,16 +47,22 @@ class ArchiveExplorer extends React.Component {
         ).isRequired,
     };
 
-    buildCache = memoize(itemList => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            fullPath: props.itemCollection.find(info => !info.parent).absolute_path,
+        };
+
+        this.memoBuildCache = memoize(this.buildCache);
+    }
+
+    buildCache = itemCollection => {
         const folders = [];
         const temp = {};
         const cache = {};
-        let root;
 
-        itemList.forEach(info => {
-            if (!info.parent) {
-                root = info.absolute_path;
-            }
+        itemCollection.forEach(info => {
             if (info.type === 'folder') {
                 folders.push(info);
             }
@@ -67,19 +73,11 @@ class ArchiveExplorer extends React.Component {
             cache[folderInfo.absolute_path] = folderInfo.item_collection.entries.map(item => temp[item.absolute_path]);
         });
 
-        return { cache, root };
-    });
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            fullPath: undefined,
-        };
-    }
+        return cache;
+    };
 
     getRowData = itemList => ({ index }) => {
-        const { name, type, modified_at: modifiedAt, ...rest } = itemList[index];
+        const { modified_at: modifiedAt, name, size, type, ...rest } = itemList[index];
 
         const rowData = {
             [KEY_NAME]: {
@@ -88,6 +86,7 @@ class ArchiveExplorer extends React.Component {
                 type,
             },
             [KEY_MODIFIED_AT]: `20${modifiedAt}`,
+            [KEY_SIZE]: size,
             ...rest,
         };
         return rowData;
@@ -105,14 +104,7 @@ class ArchiveExplorer extends React.Component {
     render() {
         const { itemCollection } = this.props;
         const { fullPath } = this.state;
-        const { cache, root } = this.buildCache(itemCollection);
-
-        if (!fullPath) {
-            this.setState({
-                fullPath: root,
-            });
-            return null;
-        }
+        const cache = this.memoBuildCache(itemCollection);
 
         const itemList = cache[fullPath];
 
@@ -125,7 +117,7 @@ class ArchiveExplorer extends React.Component {
                 >
                     {intl => [
                         <Column
-                            key="Filename"
+                            key={KEY_NAME}
                             cellRenderer={itemNameCellRenderer(intl, this.handleClick)}
                             dataKey={KEY_NAME}
                             disableSort
@@ -134,7 +126,7 @@ class ArchiveExplorer extends React.Component {
                             width={1}
                         />,
                         <Column
-                            key="Last modified date"
+                            key={KEY_MODIFIED_AT}
                             cellRenderer={readableTimeCellRenderer}
                             dataKey={KEY_MODIFIED_AT}
                             disableSort
@@ -143,9 +135,9 @@ class ArchiveExplorer extends React.Component {
                             width={1}
                         />,
                         <Column
-                            key="Size"
+                            key={KEY_SIZE}
                             cellRenderer={sizeCellRenderer()}
-                            dataKey="size"
+                            dataKey={KEY_SIZE}
                             disableSort
                             flexGrow={1}
                             label={__('size')}
