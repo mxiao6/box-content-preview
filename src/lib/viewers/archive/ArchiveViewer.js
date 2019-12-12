@@ -265,7 +265,7 @@ class ArchiveViewer extends BaseViewer {
         return Promise.all([this.loadAssets(JS, CSS), this.getRepStatus().getPromise()])
             .then(() => {
                 const { representation } = this.options;
-                const template = get(representation, 'info.url') || get(representation, 'content.url_template');
+                const template = get(representation, 'content.url_template');
                 const contentUrl = this.createContentUrlWithAuthParams(template);
                 this.startLoadTimer();
 
