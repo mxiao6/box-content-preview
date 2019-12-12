@@ -1,4 +1,3 @@
-import ArchiveLoader from './viewers/archive/ArchiveLoader';
 import ImageLoader from './viewers/image/ImageLoader';
 import Image360Loader from './viewers/box3d/image360/Image360Loader';
 import SWFLoader from './viewers/swf/SWFLoader';
@@ -12,7 +11,6 @@ import OfficeLoader from './viewers/office/OfficeLoader';
 
 // Order in this list matters
 export default [
-    ArchiveLoader,
     TextLoader, // should come before document
     OfficeLoader, // should come before document
     DocLoader, // should come after text

@@ -89,7 +89,7 @@ class ArchiveExplorer extends React.Component {
     getRowData = itemList => ({ index }) => {
         const { modified_at: modifiedAt, name, size, type, ...rest } = itemList[index];
 
-        const rowData = {
+        return {
             [KEY_NAME]: {
                 isExternal: false,
                 name,
@@ -99,7 +99,6 @@ class ArchiveExplorer extends React.Component {
             [KEY_SIZE]: size,
             ...rest,
         };
-        return rowData;
     };
 
     /**
@@ -108,12 +107,10 @@ class ArchiveExplorer extends React.Component {
      * @param {Object} cellValue - the cell being clicked
      * @return {void}
      */
-    handleClick = cellValue => {
-        const { name } = cellValue;
+    handleClick = ({ name }) => {
         const { fullPath } = this.state;
-        const nextFullPath = `${fullPath}${name}/`;
         this.setState({
-            fullPath: nextFullPath,
+            fullPath: `${fullPath}${name}/`,
         });
     };
 
