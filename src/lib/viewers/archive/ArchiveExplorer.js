@@ -1,6 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
+import getProp from 'lodash/get';
+import elementsMessages from 'box-elements-messages'; // eslint-disable-line
+import intlLocaleData from 'react-intl-locale-data'; // eslint-disable-line
 import Internationalize from 'box-ui-elements/es/elements/common/Internationalize';
 import SearchBar from 'box-ui-elements/es/elements/common/header';
 import {
@@ -9,11 +11,13 @@ import {
     itemNameCellRenderer,
 } from 'box-ui-elements/es/features/virtualized-table-renderers';
 import VirtualizedTable from 'box-ui-elements/es/features/virtualized-table';
+import { addLocaleData } from 'react-intl';
 import { Column } from 'react-virtualized/dist/es/Table/index';
 import Breadcrumbs from './Breadcrumbs';
 import { TABLE_COLUMNS, VIEWS } from './constants';
 import './ArchiveExplorer.scss';
 
+const language = __LANGUAGE__; // eslint-disable-line
 const { KEY_NAME, KEY_MODIFIED_AT, KEY_SIZE } = TABLE_COLUMNS;
 const { VIEW_FOLDER, VIEW_SEARCH } = VIEWS;
 
@@ -59,6 +63,8 @@ class ArchiveExplorer extends React.Component {
     constructor(props) {
         super(props);
 
+        addLocaleData(intlLocaleData);
+
         this.state = {
             fullPath: props.itemCollection.find(info => !info.parent).absolute_path,
             searchQuery: '',
@@ -75,7 +81,7 @@ class ArchiveExplorer extends React.Component {
      */
     getItemList = (itemCollection, fullPath) => {
         const folderInfo = itemCollection.find(item => item.absolute_path === fullPath);
-        const subItems = get(folderInfo, 'item_collection.entries');
+        const subItems = getProp(folderInfo, 'item_collection.entries');
         if (!subItems) {
             return [];
         }
@@ -181,7 +187,7 @@ class ArchiveExplorer extends React.Component {
                 : this.getItemList(itemCollection, fullPath);
 
         return (
-            <Internationalize language="en-us" messages={{}}>
+            <Internationalize language={language} messages={elementsMessages}>
                 <div className="bp-ArchiveExplorer">
                     <SearchBar isSmall={false} onSearch={this.search} searchQuery={searchQuery} view={view} />
                     <Breadcrumbs fullPath={fullPath} onClick={this.handleClickFullPath} view={view} />
