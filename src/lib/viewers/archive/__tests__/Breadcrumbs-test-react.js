@@ -28,6 +28,12 @@ describe('lib/viewers/archive/Breadcrumbs', () => {
             expect(component.find('InjectIntl(Breadcrumb)').length).to.equal(1);
             expect(component.find('PlainButton').length).to.equal(2);
         });
+
+        it('should render search result if view is search', () => {
+            const component = shallow(<Breadcrumbs fullPath={fullPath} onClick={onClick} view={VIEWS.VIEW_SEARCH} />);
+
+            expect(component.find('span').text()).to.equal(__('search_results'));
+        });
     });
 
     describe('getPathItems()', () => {
@@ -44,17 +50,6 @@ describe('lib/viewers/archive/Breadcrumbs', () => {
                 {
                     name: 'subfolder',
                     path: 'test/subfolder/',
-                },
-            ]);
-        });
-
-        it('should return search results if view is search', () => {
-            const component = shallow(<Breadcrumbs fullPath={fullPath} onClick={onClick} view={VIEWS.VIEW_SEARCH} />);
-            const pathItems = component.instance().getPathItems(fullPath);
-
-            expect(pathItems).to.eql([
-                {
-                    name: __('search_results'),
                 },
             ]);
         });

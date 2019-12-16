@@ -182,7 +182,7 @@ class ArchiveExplorer extends React.Component {
 
         return (
             <Internationalize language="en-us" messages={{}}>
-                <div className="bp-archive-explorer">
+                <div className="bp-ArchiveExplorer">
                     <SearchBar isSmall={false} onSearch={this.search} searchQuery={searchQuery} view={view} />
                     <Breadcrumbs fullPath={fullPath} onClick={this.handleClickFullPath} view={view} />
                     <VirtualizedTable

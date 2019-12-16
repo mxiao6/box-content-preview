@@ -19,21 +19,13 @@ class Breadcrumbs extends React.PureComponent {
      * @return {Array<Object>} path items including name and path string
      */
     getPathItems = fullPath => {
-        const { view } = this.props;
-
-        if (view === VIEWS.VIEW_SEARCH) {
-            return [
-                {
-                    name: __('search_results'),
-                },
-            ];
-        }
-
         const pathNames = fullPath.split('/').slice(0, -1);
+        // join path names from root to current index to get absolute path
+        const getAbsolutePath = index => pathNames.slice(0, index + 1).join('/');
 
         return pathNames.map((name, index) => ({
             name,
-            path: `${pathNames.slice(0, index + 1).join('/')}/`,
+            path: `${getAbsolutePath(index)}/`,
         }));
     };
 
@@ -44,19 +36,18 @@ class Breadcrumbs extends React.PureComponent {
      */
     render() {
         const { fullPath, onClick, view } = this.props;
-        const pathItems = this.getPathItems(fullPath);
 
         return (
             <div className="bp-header-breadcrumbs">
                 <Breadcrumb>
-                    {pathItems.map(pathItem =>
-                        view === VIEWS.VIEW_SEARCH ? (
-                            <span key={pathItem.name}>{pathItem.name}</span>
-                        ) : (
+                    {view === VIEWS.VIEW_SEARCH ? (
+                        <span>{__('search_results')}</span>
+                    ) : (
+                        this.getPathItems(fullPath).map(pathItem => (
                             <PlainButton key={pathItem.path} onClick={() => onClick(pathItem.path)} type="button">
                                 {pathItem.name}
                             </PlainButton>
-                        ),
+                        ))
                     )}
                 </Breadcrumb>
             </div>
