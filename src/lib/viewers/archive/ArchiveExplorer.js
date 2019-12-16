@@ -9,9 +9,12 @@ import {
 } from 'box-ui-elements/es/features/virtualized-table-renderers';
 import VirtualizedTable from 'box-ui-elements/es/features/virtualized-table';
 import { Column } from 'react-virtualized/dist/es/Table/index';
-import { TABLE_COLUMNS } from './constants';
+import Breadcrumbs from './Breadcrumbs';
+import { TABLE_COLUMNS, VIEWS } from './constants';
+import './ArchiveExplorer.scss';
 
 const { KEY_NAME, KEY_MODIFIED_AT, KEY_SIZE } = TABLE_COLUMNS;
+const { VIEW_FOLDER, VIEW_SEARCH } = VIEWS;
 
 class ArchiveExplorer extends React.Component {
     static propTypes = {
@@ -57,6 +60,7 @@ class ArchiveExplorer extends React.Component {
 
         this.state = {
             fullPath: props.itemCollection.find(info => !info.parent).absolute_path,
+            view: VIEW_FOLDER,
         };
     }
 
@@ -101,6 +105,12 @@ class ArchiveExplorer extends React.Component {
         };
     };
 
+    search = () => {
+        this.setState({
+            view: VIEW_SEARCH,
+        });
+    };
+
     /**
      * Handle click event, update fullPath state
      *
@@ -115,52 +125,63 @@ class ArchiveExplorer extends React.Component {
     };
 
     /**
+     * Handle click event, update fullPath state
+     *
+     * @param {string} fullPath - target folder path
+     * @return {void}
+     */
+    handleClickFullPath = fullPath => this.setState({ fullPath });
+
+    /**
      * render data
      *
      * @return {jsx} VirtualizedTable
      */
     render() {
         const { itemCollection } = this.props;
-        const { fullPath } = this.state;
+        const { fullPath, view } = this.state;
         const itemList = this.getItemList(itemCollection, fullPath);
 
         return (
             <Internationalize language="en-us" messages={{}}>
-                <VirtualizedTable
-                    className="ArchiveFilesTable"
-                    rowData={itemList}
-                    rowGetter={this.getRowData(itemList)}
-                >
-                    {intl => [
-                        <Column
-                            key={KEY_NAME}
-                            cellRenderer={itemNameCellRenderer(intl, this.handleClick)}
-                            dataKey={KEY_NAME}
-                            disableSort
-                            flexGrow={3}
-                            label={__('filename')}
-                            width={1}
-                        />,
-                        <Column
-                            key={KEY_MODIFIED_AT}
-                            cellRenderer={readableTimeCellRenderer}
-                            dataKey={KEY_MODIFIED_AT}
-                            disableSort
-                            flexGrow={2}
-                            label={__('last_modified_date')}
-                            width={1}
-                        />,
-                        <Column
-                            key={KEY_SIZE}
-                            cellRenderer={sizeCellRenderer()}
-                            dataKey={KEY_SIZE}
-                            disableSort
-                            flexGrow={1}
-                            label={__('size')}
-                            width={1}
-                        />,
-                    ]}
-                </VirtualizedTable>
+                <div className="bp-archive-explorer">
+                    <Breadcrumbs fullPath={fullPath} onClick={this.handleClickFullPath} view={view} />
+                    <VirtualizedTable
+                        className="ArchiveFilesTable"
+                        rowData={itemList}
+                        rowGetter={this.getRowData(itemList)}
+                    >
+                        {intl => [
+                            <Column
+                                key={KEY_NAME}
+                                cellRenderer={itemNameCellRenderer(intl, this.handleClick)}
+                                dataKey={KEY_NAME}
+                                disableSort
+                                flexGrow={3}
+                                label={__('filename')}
+                                width={1}
+                            />,
+                            <Column
+                                key={KEY_MODIFIED_AT}
+                                cellRenderer={readableTimeCellRenderer}
+                                dataKey={KEY_MODIFIED_AT}
+                                disableSort
+                                flexGrow={2}
+                                label={__('last_modified_date')}
+                                width={1}
+                            />,
+                            <Column
+                                key={KEY_SIZE}
+                                cellRenderer={sizeCellRenderer()}
+                                dataKey={KEY_SIZE}
+                                disableSort
+                                flexGrow={1}
+                                label={__('size')}
+                                width={1}
+                            />,
+                        ]}
+                    </VirtualizedTable>
+                </div>
             </Internationalize>
         );
     }
