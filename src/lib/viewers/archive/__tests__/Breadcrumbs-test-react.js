@@ -9,7 +9,7 @@ let fullPath;
 let onClick;
 let view;
 
-describe.only('lib/viewers/archive/Breadcrumbs', () => {
+describe('lib/viewers/archive/Breadcrumbs', () => {
     beforeEach(() => {
         fullPath = 'test/subfolder/';
         onClick = sandbox.stub();
