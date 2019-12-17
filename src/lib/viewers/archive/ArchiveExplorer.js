@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import getProp from 'lodash/get';
+import fuzzysearch from 'fuzzysearch';
 import elementsMessages from 'box-elements-messages'; // eslint-disable-line
 import intlLocaleData from 'react-intl-locale-data'; // eslint-disable-line
 import Internationalize from 'box-ui-elements/es/elements/common/Internationalize';
@@ -169,8 +170,7 @@ class ArchiveExplorer extends React.Component {
      */
     getSearchResult = (itemCollection, searchQuery) => {
         const trimmedQuery = searchQuery.trim();
-
-        return itemCollection.filter(item => item.name.includes(trimmedQuery));
+        return itemCollection.filter(item => fuzzysearch(trimmedQuery, item.name));
     };
 
     /**
