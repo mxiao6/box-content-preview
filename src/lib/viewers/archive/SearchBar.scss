@@ -7,9 +7,9 @@
     padding: 0 20px;
     background: $almost-white;
     border-bottom: 1px solid $bdl-gray-10;
+}
 
-    input[type='search'] {
-        width: 100%;
-        font: inherit;
-    }
+.bp-SearchBar-input {
+    width: 100%;
+    font: inherit;
 }
