@@ -116,7 +116,7 @@ class ArchiveExplorer extends React.Component {
     };
 
     /**
-     * Handle click event, update fullPath state, reset search and view
+     * Handle item click event, update fullPath state, reset search and view
      *
      * @param {Object} cellValue - the cell being clicked
      * @return {void}
@@ -124,7 +124,7 @@ class ArchiveExplorer extends React.Component {
     handleItemClick = ({ fullPath }) => this.setState({ view: VIEW_FOLDER, fullPath, searchQuery: '' });
 
     /**
-     * Handle click event, update fullPath state
+     * Handle breadcrumb click event, update fullPath state
      *
      * @param {string} fullPath - target folder path
      * @return {void}

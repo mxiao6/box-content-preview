@@ -7,7 +7,6 @@ const SearchBar = ({ onSearch, searchQuery }) => {
         <div className="bp-SearchBar">
             <input
                 aria-label={__('search')}
-                className="bp-SearchBar-input"
                 onChange={({ currentTarget }) => onSearch(currentTarget.value)}
                 placeholder={__('search_placeholder')}
                 type="search"
