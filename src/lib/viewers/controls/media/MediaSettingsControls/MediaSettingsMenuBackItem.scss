@@ -1,0 +1,33 @@
+@import './styles';
+
+.bp-MediaSettingsMenuBackItem {
+    @include bp-MediaSettingsMenuItem;
+
+    &:hover {
+        background-color: $item-hover-color;
+
+        .bp-MediaSettingsMenuBackItem-label {
+            color: lighten($blue-steel, 50%);
+        }
+    }
+
+    .bp-has-keyboard-focus &:focus {
+        background-color: $box-blue;
+
+        .bp-MediaSettingsMenuBackItem-label {
+            color: $white;
+        }
+
+        svg {
+            fill: $white;
+        }
+    }
+}
+
+.bp-MediaSettingsMenuBackItem-arrow {
+    @include bp-MediaSettingsMenuItem-arrow;
+}
+
+.bp-MediaSettingsMenuBackItem-label {
+    @include bp-MediaSettingsMenuItem-label;
+}

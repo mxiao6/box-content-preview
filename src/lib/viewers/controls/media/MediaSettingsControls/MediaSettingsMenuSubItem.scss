@@ -1,0 +1,53 @@
+@import './styles';
+
+.bp-MediaSettingsMenuSubItem {
+    @include bp-MediaSettingsMenuItem;
+
+    &:hover {
+        background-color: $item-hover-color;
+
+        .bp-MediaSettingsMenuSubItem-icon svg {
+            fill: $blue-steel;
+        }
+
+        .bp-MediaSettingsMenuSubItem-value {
+            color: $blue-steel;
+        }
+    }
+
+    .bp-has-keyboard-focus &:focus {
+        background-color: $box-blue;
+
+        .bp-MediaSettingsMenuSubItem-value {
+            color: $white;
+        }
+
+        svg {
+            fill: $white;
+        }
+    }
+}
+
+.bp-MediaSettingsMenuSubItem-value {
+    @include bp-MediaSettingsMenuItem-value;
+
+    &.bp-is-active {
+        color: $box-blue;
+    }
+}
+
+.bp-MediaSettingsMenuSubItem-icon {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+
+    svg {
+        width: 16px;
+        height: 16px;
+        visibility: hidden;
+    }
+
+    &.bp-is-active svg {
+        visibility: visible;
+    }
+}

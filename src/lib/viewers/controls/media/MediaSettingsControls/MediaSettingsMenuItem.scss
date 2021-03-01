@@ -1,18 +1,10 @@
-@import '../styles';
-
-$media-settings-padding: 8px;
+@import './styles';
 
 .bp-MediaSettingsMenuItem {
-    display: table-row;
-    height: 26px;
-    padding: $media-settings-padding / 2;
-    overflow: hidden;
-    white-space: nowrap;
-    outline: 0 none; // will be overridden by our own
-    cursor: pointer;
+    @include bp-MediaSettingsMenuItem;
 
     &:hover {
-        background-color: #f6fafd;
+        background-color: $item-hover-color;
 
         .bp-MediaSettingsMenuItem-label {
             color: lighten($blue-steel, 50%);
@@ -22,36 +14,29 @@ $media-settings-padding: 8px;
             color: $blue-steel;
         }
     }
-}
 
-.bp-MediaSettingsMenuItem-label,
-.bp-MediaSettingsMenuItem-value {
-    display: table-cell;
-    padding: $media-settings-padding / 2;
-    vertical-align: middle;
+    .bp-has-keyboard-focus &:focus {
+        background-color: $box-blue;
+
+        .bp-MediaSettingsMenuItem-label,
+        .bp-MediaSettingsMenuItem-value {
+            color: $white;
+        }
+
+        svg {
+            fill: $white;
+        }
+    }
 }
 
 .bp-MediaSettingsMenuItem-label {
-    color: $downtown-grey;
-    font-weight: normal;
-    font-size: 11px;
-    text-align: left;
-    text-transform: uppercase;
+    @include bp-MediaSettingsMenuItem-label;
 }
 
 .bp-MediaSettingsMenuItem-value {
-    padding-left: 10px;
-    color: $sunset-grey;
-    font-size: 12px;
-    text-align: left;
+    @include bp-MediaSettingsMenuItem-value;
 }
 
 .bp-MediaSettingsMenuItem-arrow {
-    display: table-cell;
-    vertical-align: middle;
-
-    .bp-MediaSettingsMenuItem-arrowIcon {
-        width: 18px;
-        height: 18px;
-    }
+    @include bp-MediaSettingsMenuItem-arrow;
 }
