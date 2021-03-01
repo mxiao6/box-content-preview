@@ -1,0 +1,27 @@
+@import '../styles';
+
+.bp-MediaSettingsFlyout {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    display: inline-block;
+    max-width: 400px;
+    max-height: 210px;
+    padding: 8px;
+    overflow-x: hidden;
+    overflow-y: auto; // So scrollbar doesn't show on hover in IE/Edge
+    color: $fours;
+    font-size: 10px;
+    line-height: normal;
+    background-color: $white;
+    border: 1px solid $sf-fog;
+    border-radius: 2px;
+    transform: translateY(-110%);
+    visibility: visible;
+    transition: width .2s, height .2s;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    &.is-in-transition {
+        overflow: hidden; // hide scrollbars during menu -> submenu transition
+    }
+}

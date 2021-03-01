@@ -1,0 +1,57 @@
+@import '../styles';
+
+$media-settings-padding: 8px;
+
+.bp-MediaSettingsMenuItem {
+    display: table-row;
+    height: 26px;
+    padding: $media-settings-padding / 2;
+    overflow: hidden;
+    white-space: nowrap;
+    outline: 0 none; // will be overridden by our own
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f6fafd;
+
+        .bp-MediaSettingsMenuItem-label {
+            color: lighten($blue-steel, 50%);
+        }
+
+        .bp-MediaSettingsMenuItem-value {
+            color: $blue-steel;
+        }
+    }
+}
+
+.bp-MediaSettingsMenuItem-label,
+.bp-MediaSettingsMenuItem-value {
+    display: table-cell;
+    padding: $media-settings-padding / 2;
+    vertical-align: middle;
+}
+
+.bp-MediaSettingsMenuItem-label {
+    color: $downtown-grey;
+    font-weight: normal;
+    font-size: 11px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.bp-MediaSettingsMenuItem-value {
+    padding-left: 10px;
+    color: $sunset-grey;
+    font-size: 12px;
+    text-align: left;
+}
+
+.bp-MediaSettingsMenuItem-arrow {
+    display: table-cell;
+    vertical-align: middle;
+
+    .bp-MediaSettingsMenuItem-arrowIcon {
+        width: 18px;
+        height: 18px;
+    }
+}

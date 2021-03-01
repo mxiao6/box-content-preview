@@ -51,7 +51,9 @@ class MediaBaseViewer extends BaseViewer {
         this.containerClickHandler = this.containerClickHandler.bind(this);
         this.errorHandler = this.errorHandler.bind(this);
         this.handleAutoplay = this.handleAutoplay.bind(this);
+        this.handleAutoplayReact = this.handleAutoplayReact.bind(this);
         this.handleRate = this.handleRate.bind(this);
+        this.handleRateReact = this.handleRateReact.bind(this);
         this.handleTimeupdateFromMediaControls = this.handleTimeupdateFromMediaControls.bind(this);
         this.loadeddataHandler = this.loadeddataHandler.bind(this);
         this.mediaendHandler = this.mediaendHandler.bind(this);
@@ -393,6 +395,28 @@ class MediaBaseViewer extends BaseViewer {
     }
 
     /**
+     * Handler for playback rate in React controls
+     *
+     * @private
+     * @param {string} rate - number string
+     * @emits ratechange
+     * @return {void}
+     */
+    handleRateReact(rate) {
+        const speed = rate - 0;
+        if (speed && this.mediaEl.playbackRate !== speed && this.mediaEl.playbackRate > 0) {
+            this.emit('ratechange', speed);
+        }
+        this.mediaEl.playbackRate = speed;
+
+        this.cache.set(MEDIA_SPEED_CACHE_KEY, rate, true);
+
+        if (this.controls) {
+            this.renderUI();
+        }
+    }
+
+    /**
      * Handler for volume
      *
      * @private
@@ -424,6 +448,24 @@ class MediaBaseViewer extends BaseViewer {
      */
     handleAutoplay() {
         this.emit('autoplay', this.isAutoplayEnabled());
+    }
+
+    /**
+     * Handler for autoplay in React controls
+     *
+     * @private
+     * @param {boolean} autoplay - True if enabled
+     * @emits autoplay
+     * @return {void}
+     */
+    handleAutoplayReact(autoplay) {
+        this.emit('autoplay', autoplay);
+
+        this.cache.set(MEDIA_AUTOPLAY_CACHE_KEY, autoplay ? 'Enabled' : 'Disabled', true);
+
+        if (this.controls) {
+            this.renderUI();
+        }
     }
 
     /**
